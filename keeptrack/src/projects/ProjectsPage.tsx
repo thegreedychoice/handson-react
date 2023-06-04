@@ -18,7 +18,7 @@ function ProjectsPage() {
       setLoading(true);
       try {
         const data = await projectAPI.get(currentPage);
-        if (currentPage == 1) {
+        if (currentPage === 1) {
           setProjects(data);
         } else {
           setProjects((projects) => [...projects, ...data]);
@@ -37,10 +37,19 @@ function ProjectsPage() {
   const saveProject = (project: Project) => {
     console.log('Saving project: ', project.id);
 
-    let updatedProjects = projects.map((p: Project) => {
-      return p.id === project.id ? project : p;
-    });
-    setProjects(updatedProjects);
+    projectAPI
+      .put(project)
+      .then((updatedProject) => {
+        let updatedProjects = projects.map((p: Project) => {
+          return p.id === project.id ? new Project(updatedProject) : p;
+        });
+        setProjects(updatedProjects);
+      })
+      .catch((e) => {
+        if (e instanceof Error) {
+          setError(e.message);
+        }
+      });
   };
 
   return (
