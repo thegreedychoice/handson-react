@@ -451,7 +451,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<FileInput />);
 
 - React recommends using composition instead of inheritance to reuse code between components.
 
-- In general, components can be nested inside other components or live next to other components just like in HTML where a <div> can have a <p> inside of it and the <p> can have an <a> and an <img>. HTML works on composition so React components work on composition as they are essentially HTML tags you invented.
+- In general, components can be nested inside other components or live next to other components just like in HTML where a <div> can have a <p> inside of it and the <p> can have an &lt;a&gt; and an &lt;img&gt;. HTML works on composition so React components work on composition as they are essentially HTML tags you invented.
 
 - _We use React in thousands of components, and we haven’t found any use cases where we would recommend creating component inheritance hierarchies. - Facebook_
 
@@ -566,3 +566,358 @@ function PhotoList() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(<PhotoList />);
 ```
+
+## `Routing`
+
+- Similar in function to a server-side router in an MVC framework
+
+  - Associates a route (url) with a particular controller action
+
+- React Router switches between (page/container) components when a route changes
+- Back button is broken by default when page/container components change
+
+  - the browser's history is not updated with a new url when page/container components change
+    - React Router programmatically adds entries to the browser's history
+    - enables the back button to work in React applications
+    - uses the HTML5 [pushState history API](https://developer.mozilla.org/en-US/docs/Web/API/History_API#Adding_and_modifying_history_entries) under the hood
+
+- There are two versions:
+
+  - BrowserRouter (react-router-dom) for web applications.
+  - NativeRouter (react-router-native) for use with React Native.
+
+- Install it like this
+
+```
+npm install react-router-dom@6.3
+```
+
+[More on Routing](https://handsonreact.com/docs/routing)
+
+[More on Caching Best Practices](https://jakearchibald.com/2016/caching-best-practices/)
+
+## `Custom Hooks`
+
+- Custom Hooks allow you to **easily reuse stateful logic between components.**
+
+- Image being able to write a function with just your component logic code but without the UI (JSX) and then reuse that in several components...that is what a custom hook enables.
+
+- Traditionally in React, we’ve had two popular ways to share stateful logic between components: render props and higher-order components. Hooks solve many of the same problems without forcing you to add more components to the tree.
+
+- **Hooks allow you to reuse stateful logic without changing your component hierarchy**
+
+- _Prefer creating a hook for reuseable logic over the render props pattern or high-order components where possible._
+
+### `Rules of Hooks`
+
+- Only call Hooks at the top level (of your function component)
+
+  - _Don't call them inside loops (for), conditions (if), or nested functions (only inside your main function component body)_
+
+- Only call hooks from React functions
+  - call hooks from React function components
+  - call hooks from other custom hooks
+
+[useReducer Example Application](https://handsonreact.com/docs/other-hooks)
+[ More on Custom Hooks Documentation](https://react.dev/learn/reusing-logic-with-custom-hooks)
+[Custom Hook Examples/Recipes](https://usehooks.com/)
+
+### `Context`
+
+Context is designed to share data that can be considered “global” for a tree of React components, such as **the current authenticated user, theme, or preferred language.**
+
+#### `When to Use Context?`
+
+When props need to be shared with most of a tree of components.
+
+[Example](https://handsonreact.com/docs/context)
+
+## `Why use Redux? - State Management`
+
+- The primary reason you need Redux is to help share data and functions between components in your application which are in different parts of the component tree and not immediate relatives
+
+- The sharing between components is achieved by pulling data and functions out of the components and into a shared object (Store) that is not a component
+
+- The shared object (Store) is made available to parts of the application by wrapping it in custom element or tag (React Component) called a provider (because it provides the data and functions).
+
+- **You can recreate the functionality of Redux using React Context**
+
+- React Context is designed for low frequency updates (Authenticated User, Theme, Locale (language))
+
+- React Context is not designed for high frequency updates (keyboard input)
+
+- React Context by default causes a rerender of all components on the page which use a given context
+
+- React Context has an easier to understand API than Redux
+
+[More on State Management](https://handsonreact.com/docs/state-management)
+
+### `Examples (React Context vs Redux)`
+
+- Good use cases for React Context include:
+
+  - Signed In User and their permissions
+  - (Color) Theme of the application
+  - Language (locale) used in the application
+
+- Good use cases for Redux include:
+
+  - A count of something that displays in a header or sidebar (likes, upvotes, active projects, items in shopping cart, unread messages)
+    - Again, this often can be done by having a common parent component (in many cases the App component) but sometimes it might be too far removed from where you are updating this information
+  - Collaborative software where multiple users can work on the same document at the same time (Google Docs, Google Sheets etc...)
+
+### `Deciding on how to handle State`
+
+1. Does it belong in the Url? ( current page, current record, sorting, scroll location...)
+
+   - Keep URL-related state in the URL.
+
+2. Want to persist data across sessions or make data available offline?
+
+   - Consider web storage (localstorage, IndexedDB, etc)
+
+3. Is it server data?
+
+   - Try react-query or swr. Using GraphQL? Then also consider Relay, Apollo.
+
+4. is it a DOM element reference, state that doesn't change or not rendered at all?
+
+   - Use a ref
+
+5. Can it be derived from existing props, state, URL, etc?
+
+   - Derive it "on-the-fly" as part of each render (memoize if expensive).
+
+6. Does only one component use the data?
+
+   - Use local state.
+
+7. Do a few related components use it?
+
+   - Store state in a common parent.
+
+8. Is it a global state? Consider, in order:
+   - Store in App's root component, context, or separate library like Redux.
+
+## `React Query`
+
+[More on React Query](https://handsonreact.com/docs/react-query)
+[TanStack](https://tanstack.com/query/v3/)
+
+## `Testing`
+
+- Jest is a JavaScript testing framework
+- Features:
+
+  - task runner
+  - assertion library
+  - mocking support
+  - snapshots
+  - isolated, paraellelized tests to maximize performance
+
+- React Testing Library is a library for testing React Components
+
+  - Resembles the way the components are used by end users
+
+- Its primary guiding principle is:
+
+  - The more your tests resemble the way your software is used, the more confidence they can give you.
+
+- I recommend React Testing Library because of it's focus on not testing code implementation details
+
+- Features:
+  - Work with actual DOM nodes.
+  - The utilities this library provides facilitate querying the DOM in the same way the user would.
+  - Finding form elements by their label text (just like a user would)
+  - Finding links and buttons from their text (like a user would).
+  - Encourages your applications to be more accessible
+
+[More on Testing](https://handsonreact.com/docs/testing)
+
+## `Render Props`
+
+- The term “render prop” refers to a technique for sharing code between React components using a prop whose value is a function.
+
+- A component with a render prop **takes a function that returns a React element and calls it instead of implementing its own render logic.**
+
+### `Example`
+
+```
+function Box(props) {
+  return (
+    <div style={{ width: 100, height: 100, border: "1px solid black" }}>
+      {props.render && props.render()}
+    </div>
+  );
+}
+
+function App() {
++ return <Box render={() => <h3>Jack</h3>} />;
+}
+
+
+// use children instead of render
+function Box(props) {
+  return (
+    <div style={{ width: 100, height: 100, border: '1px solid black' }}>
+-     {props.render && props.render()}
++     {props.children}
+    </div>
+  );
+}
+
+// function App() {
+//   return <Box render={() => <h3>Jack</h3>} />;
+// }
+
+function App() {
+  return (
+    <Box>
+      <h3>Jack</h3>
+    </Box>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+```
+
+### `Use Cases`
+
+- Cross-Cutting Concerns
+
+  - When you have the need to share the state or behavior that one component encapsulates to other components that need that same state
+
+- You can often get the same reuse out of your code using any of the following techniques
+  - Higher-Order Components
+  - Render Props
+  - Custom Hooks
+
+[More on Render Props](https://handsonreact.com/docs/render-props)
+
+## `Higher-Order Component`
+
+A higher-order component (HOC) is an advanced technique in React for reusing component logic. HOCs **are not part of the React API, per se. They are a pattern that emerges from React’s compositional nature.**
+
+### `Definition`
+
+- Higher Order Component (HOC): an abstraction over a component.
+
+  - When given a component (and perhaps some other parameters), they return a new component.
+
+- From the perspective of the JavaScript language:
+  - a higher-order component is a function that takes a component and returns a new component.
+
+```
+const EnhancedComponent = higherOrderComponent(WrappedComponent);
+```
+
+### `Example`
+
+```
+function Greet(props) {
+return <span>Hi</span>;
+}
+
+function withName(Greet, name) {
+function Wrapper(props) {
+return (
+
+<div>
+<Greet {...props} /> <em>{name}</em>
+</div>
+);
+}
+return Wrapper;
+}
+
+const GreetWithName = withName(Greet, "Riya");
+
+function App() {
+return <GreetWithName />;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+```
+
+[More on HOC](https://handsonreact.com/docs/higher-order-components)
+
+## `Security`
+
+### `Encoding`
+
+- React by default encodes almost all data values when creating DOM elements.
+
+- To provide users with an escape hatch to insert HTML content into the DOM, React is equipped with the eloquently-named function dangerouslySetInnerHTML(), clearly conveying the dangers of using it.
+  - DON'T: Use the method dangerouslySetInnerHTML()
+
+### `Handled by Users`
+
+Contexts that are _unattended by the React security model_ and are **handled by the users** include creating:
+
+- HTML anchor (link) elements with user- provided input as the source for the href attribute value.
+
+  - This mostly applies to versions prior to the recently released React v16.9 which mitigates javascript:-based URLs in href attribute values and other contexts such as form actions, iFrame sources, and others.
+    ```
+    data:text/html,
+    <a href="javascript: alert('hello from javascript!')">click me</a>
+    ```
+
+- React components from user-provided input
+
+- React’s server-side rendering could potentially introduce XSS vulnerabilities if malicious user input is injected as-is to a JavaScript context without being properly encoded or sanitized.
+
+```
+let data = {
+username: "pwned",
+bio: "</script><script>alert('XSS Vulnerability!')</script>"
+}
+
+<script>window.__STATE__ = ${JSON.stringify({ data })}</script>
+```
+
+### `What to look for in a Code Review?`
+
+1. Look for dangerouslySetInnerHTML being called.
+
+2. Can users add links that other users may click on? If so, try adding a ‘link’ like this:
+
+   ```
+   javascript: alert('You are vulnerable to XSS!');
+   ```
+
+   If the alert pops up on the page, you have an XSS vulnerability. Try everywhere these custom links are loaded. Most likely, not every instance will be vulnerable.
+
+3. Look for JSON.stringify() being called with a variable that may have un-trusted data inside a script tag.
+
+[More on Security](https://handsonreact.com/docs/security)
+
+## `Performance`
+
+### `Premature Optimization`
+
+- Premature optimization is the root of all evil -- DonaldKnuth
+
+- Premature Optimization is optimizing before we know that we need to do it.
+
+- **Recommendation:** Get your application working and then near the end of a development cycle take the time to optimize for performance.
+
+[More on Performance](https://handsonreact.com/docs/performance)
+
+## `Styling`
+
+[More on Styling](https://handsonreact.com/docs/styles)
+
+## `References`
+
+[Redux](https://handsonreact.com/docs/redux)
+[React Redux](https://handsonreact.com/docs/react-redux)
+[Redux Thunk](https://handsonreact.com/docs/redux-thunk)
+[React Redux Thunk](https://handsonreact.com/docs/react-redux-thunk)
+[Redux & Typescript](https://handsonreact.com/docs/redux-typescript)
+[Modern Javascript](https://handsonreact.com/docs/modern-javascript)
+[Typescript](https://handsonreact.com/docs/typescript)
+[Promises & Async Await](https://handsonreact.com/docs/promises-async-await)
+[Essential Javascript for React](https://handsonreact.com/docs/essential-javascript-react)
+[CSS Grid](https://handsonreact.com/docs/F01-CSSGrid)
+[Flexbox](https://handsonreact.com/docs/F02-FlexBox)
+[UI Components](https://handsonreact.com/docs/ui-compoonents)

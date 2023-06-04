@@ -1,4 +1,4 @@
-import { useState } from 'react';
+/* import { useState } from 'react';
 import { Project } from './Project';
 import ProjectCard from './ProjectCard';
 import ProjectForm from './ProjectForm';
@@ -11,9 +11,10 @@ import ProjectForm from './ProjectForm';
 
 interface ProjectListProps {
   projects: Array<Project>;
+  onSave: (project: Project) => void;
 }
 
-function ProjectList({ projects }: ProjectListProps) {
+function ProjectList({ projects, onSave }: ProjectListProps) {
   const [projectBeingEdited, setProjectBeingEdited] = useState({});
 
   const handleEditing = (project: Project) => {
@@ -31,7 +32,11 @@ function ProjectList({ projects }: ProjectListProps) {
       {projects.map((project) => (
         <div key={project.id} className="cols-sm">
           {project === projectBeingEdited ? (
-            <ProjectForm project={project} onCancel={cancelEditing} />
+            <ProjectForm
+              project={project}
+              onSave={onSave}
+              onCancel={cancelEditing}
+            />
           ) : (
             <ProjectCard project={project} onEdit={handleEditing} />
           )}
@@ -42,3 +47,6 @@ function ProjectList({ projects }: ProjectListProps) {
 }
 
 export default ProjectList;
+ */
+
+export {};

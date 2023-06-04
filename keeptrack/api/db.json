@@ -107,8 +107,8 @@
       "imageUrl": "/assets/placeimg_500_300_arch11.jpg",
       "contractTypeId": 2,
       "contractSignedOn": "2009-11-20T04:57:43.124Z",
-      "budget": 74262,
-      "isActive": false
+      "budget": 566,
+      "isActive": true
     },
     {
       "id": 12,
@@ -357,8 +357,8 @@
       "imageUrl": "/assets/placeimg_500_300_arch8.jpg",
       "contractTypeId": 7,
       "contractSignedOn": "2017-11-25T01:45:55.620Z",
-      "budget": 33041,
-      "isActive": true
+      "budget": 444,
+      "isActive": false
     },
     {
       "id": 37,
@@ -497,7 +497,7 @@
       "imageUrl": "/assets/placeimg_500_300_arch4.jpg",
       "contractTypeId": 6,
       "contractSignedOn": "2011-06-18T04:02:32.471Z",
-      "budget": 66873,
+      "budget": 67676,
       "isActive": true
     },
     {
@@ -537,7 +537,7 @@
       "imageUrl": "/assets/placeimg_500_300_arch10.jpg",
       "contractTypeId": 2,
       "contractSignedOn": "2015-01-21T07:03:49.836Z",
-      "budget": 74221,
+      "budget": 8888,
       "isActive": false
     },
     {
@@ -937,8 +937,8 @@
       "imageUrl": "/assets/placeimg_500_300_arch5.jpg",
       "contractTypeId": 6,
       "contractSignedOn": "2017-03-28T16:05:32.780Z",
-      "budget": 63025,
-      "isActive": true
+      "budget": 10099,
+      "isActive": false
     },
     {
       "id": 95,
@@ -947,8 +947,8 @@
       "imageUrl": "/assets/placeimg_500_300_arch6.jpg",
       "contractTypeId": 2,
       "contractSignedOn": "2010-09-24T21:02:41.601Z",
-      "budget": 38853,
-      "isActive": false
+      "budget": 77777,
+      "isActive": true
     },
     {
       "id": 97,

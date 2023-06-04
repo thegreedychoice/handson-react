@@ -1,96 +1,86 @@
-import { useEffect, useState } from 'react';
-import { projectAPI } from './projectAPI';
-import { Project } from './Project';
 import ProjectList from './ProjectList';
+import { useProjects } from './hooks/UseProjectHook';
+
+// this is with React Query
 
 function ProjectsPage() {
-  const [projects, setProjects] = useState<Array<Project>>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>(undefined);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const handleMoreClick = () => {
-    setCurrentPage((currentPage) => currentPage + 1);
-  };
-
-  useEffect(() => {
-    async function loadProjects() {
-      setLoading(true);
-      try {
-        const data = await projectAPI.get(currentPage);
-        if (currentPage === 1) {
-          setProjects(data);
-        } else {
-          setProjects((projects) => [...projects, ...data]);
-        }
-      } catch (e) {
-        if (e instanceof Error) {
-          setError(e.message);
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadProjects();
-  }, [currentPage]);
-
-  const saveProject = (project: Project) => {
-    console.log('Saving project: ', project.id);
-
-    projectAPI
-      .put(project)
-      .then((updatedProject) => {
-        let updatedProjects = projects.map((p: Project) => {
-          return p.id === project.id ? new Project(updatedProject) : p;
-        });
-        setProjects(updatedProjects);
-      })
-      .catch((e) => {
-        if (e instanceof Error) {
-          setError(e.message);
-        }
-      });
-  };
+  const {
+    data,
+    isLoading,
+    error,
+    isError,
+    isFetching, // isFetching status to show when data is refreshing in the background.
+    page,
+    setPage,
+    isPreviousData,
+  } = useProjects();
 
   return (
     <>
       <h1>Projects</h1>
 
-      {error && (
+      {data ? (
+        <>
+          {isFetching && <span className="toast">Refreshing...</span>}
+          <ProjectList projects={data} />
+          <div className="row">
+            <div className="col-sm-4">Current page: {page + 1}</div>
+            <div className="col-sm-4">
+              <div className="button-group right">
+                <button
+                  className="button "
+                  onClick={() => setPage((oldPage) => oldPage - 1)}
+                  disabled={page === 0}
+                >
+                  Previous
+                </button>
+                <button
+                  className="button"
+                  onClick={() => {
+                    if (!isPreviousData) {
+                      setPage((oldPage) => oldPage + 1);
+                    }
+                  }}
+                  disabled={data.length != 10}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : isLoading ? (
+        <div className="center-page">
+          <span className="spinner primary"></span>
+          <p>Loading...</p>
+        </div>
+      ) : isError && error instanceof Error ? (
         <div className="row">
           <div className="card large error">
             <section>
               <p>
                 <span className="icon-alert inverse "></span>
-                {error}
+                {error.message}
               </p>
             </section>
           </div>
         </div>
-      )}
-
-      <ProjectList projects={projects} onSave={saveProject} />
-
-      {!loading && !error && (
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="button-group fluid">
-              <button className="button default" onClick={handleMoreClick}>
-                More...
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {loading && (
-        <div className="center-page">
-          <span className="spinner primary"></span>
-          <p>Loading...</p>
-        </div>
-      )}
+      ) : null}
     </>
   );
 }
 
 export default ProjectsPage;
+
+// return (
+//   <>
+//     <h1>Header</h1>
+//     {data ? (
+//       <p>data</p>
+//     ) : isLoading ? (
+//       <p>Loading...</p>
+//     ) : isError ? (
+//       <p>Error Message</p>
+//     ) : null}
+//   </>
+// );

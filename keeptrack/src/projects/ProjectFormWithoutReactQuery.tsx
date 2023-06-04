@@ -1,15 +1,17 @@
 import { SyntheticEvent, useState } from 'react';
 import { Project } from './Project';
-import { useSaveProject } from './hooks/UseProjectHook';
 
-// With React Query
 interface ProjectFormProps {
   project: Project;
+  onSave: (project: Project) => void;
   onCancel: () => void;
 }
 
-// With React Query
-function ProjectForm({ project: initialProject, onCancel }: ProjectFormProps) {
+function ProjectForm({
+  project: initialProject,
+  onSave,
+  onCancel,
+}: ProjectFormProps) {
   const [project, setProject] = useState(initialProject);
   const [errors, setErrors] = useState({
     name: '',
@@ -17,11 +19,10 @@ function ProjectForm({ project: initialProject, onCancel }: ProjectFormProps) {
     budget: '',
   });
 
-  const { mutate: saveProject, isLoading } = useSaveProject();
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault(); // prevent the default behaviour of browser to post to the server
     if (!isValid()) return;
-    saveProject(project);
+    onSave(project);
   };
 
   const handleChange = (event: any) => {
@@ -85,7 +86,6 @@ function ProjectForm({ project: initialProject, onCancel }: ProjectFormProps) {
 
   return (
     <form className="input-group vertical" onSubmit={handleSubmit}>
-      {isLoading && <span className="toast">Saving...</span>}
       <label htmlFor="name">Project Name</label>
       <input
         type="text"
